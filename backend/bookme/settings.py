@@ -8,7 +8,7 @@ SECRET_KEY = 'django-insecure-bookme-saudi-arabia-production-key-change-in-prod'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['erp.aseyl.com', 'www.erp.aseyl.com', 'localhost', '127.0.0.1', '*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -86,6 +86,10 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8686',
     'http://127.0.0.1:8686',
+    'http://erp.aseyl.com',
+    'https://erp.aseyl.com',
+    'http://www.erp.aseyl.com',
+    'https://www.erp.aseyl.com',
 ]
 
 REST_FRAMEWORK = {
