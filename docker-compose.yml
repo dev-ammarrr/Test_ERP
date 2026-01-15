@@ -1,0 +1,46 @@
+services:
+  backend:
+    image: python:3.11-slim
+    working_dir: /app
+    ports:
+      - "0.0.0.0::8000"
+    volumes:
+      - ./backend:/app
+    command: sh -c "pip install -r requirements.txt && python manage.py makemigrations && python manage.py migrate && if [ -f seed_auth.py ]; then python seed_auth.py || (echo '⚠️ seed_auth.py had issues, but continuing...' && echo '   Authentication may need manual setup. Check logs above.'); fi && (python init_db.py || python manage.py populate_data || true) && python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    ports:
+      - "0.0.0.0::3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm start"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - PORT=3000
+      - WDS_SOCKET_PORT=0
+      - WDS_SOCKET_HOST=127.0.0.1
+      - FAST_REFRESH=false
+      - GENERATE_SOURCEMAP=false
+      - DISABLE_ESLINT_PLUGIN=true
+    networks:
+      - app-network
+    depends_on:
+      backend:
+        condition: service_started
+
+networks:
+  app-network:
+    driver: bridge
