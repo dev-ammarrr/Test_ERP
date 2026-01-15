@@ -11,9 +11,9 @@ Full-stack booking platform for flights, hotels, and events with RBAC authentica
 docker-compose up --build
 
 # Access:
-# Frontend: http://localhost:3000
-# Backend:  http://localhost:8000/api
-# Admin:    http://localhost:8000/admin
+# Frontend: http://localhost:8686
+# Backend:  http://localhost:8585/api
+# Admin:    http://localhost:8585/admin
 ```
 
 ### Option 2: Without Docker
@@ -35,7 +35,7 @@ python seed_auth.py
 python init_db.py
 
 # Run server
-python manage.py runserver
+python manage.py runserver 8585
 ```
 
 #### Frontend Setup
@@ -47,7 +47,7 @@ cd frontend
 npm install
 
 # Start dev server
-npm start
+PORT=8686 npm start
 ```
 
 ## Test Credentials
@@ -60,14 +60,14 @@ npm start
 
 ### Frontend (npm)
 ```bash
-npm start      # Start dev server (port 3000)
+PORT=8686 npm start  # Start dev server (port 8686)
 npm run build  # Build for production
 npm test       # Run tests
 ```
 
 ### Backend (Python)
 ```bash
-python manage.py runserver        # Start server (port 8000)
+python manage.py runserver 8585   # Start server (port 8585)
 python manage.py makemigrations   # Create migrations
 python manage.py migrate          # Apply migrations
 python manage.py createsuperuser  # Create admin user

@@ -3,16 +3,16 @@ services:
     image: python:3.11-slim
     working_dir: /app
     ports:
-      - "0.0.0.0::8000"
+      - "0.0.0.0:8585:8585"
     volumes:
       - ./backend:/app
-    command: sh -c "pip install -r requirements.txt && python manage.py makemigrations && python manage.py migrate && if [ -f seed_auth.py ]; then python seed_auth.py || (echo '⚠️ seed_auth.py had issues, but continuing...' && echo '   Authentication may need manual setup. Check logs above.'); fi && (python init_db.py || python manage.py populate_data || true) && python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "pip install -r requirements.txt && python manage.py makemigrations && python manage.py migrate && if [ -f seed_auth.py ]; then python seed_auth.py || (echo '⚠️ seed_auth.py had issues, but continuing...' && echo '   Authentication may need manual setup. Check logs above.'); fi && (python init_db.py || python manage.py populate_data || true) && python manage.py runserver 0.0.0.0:8585"
     environment:
       - PYTHONUNBUFFERED=1
     networks:
       - app-network
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/')"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8585/')"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -22,14 +22,14 @@ services:
     image: node:20-alpine
     working_dir: /app
     ports:
-      - "0.0.0.0::3000"
+      - "0.0.0.0:8686:8686"
     volumes:
       - ./frontend:/app
       - /app/node_modules
     command: sh -c "npm install && npm start"
     environment:
       - CHOKIDAR_USEPOLLING=true
-      - PORT=3000
+      - PORT=8686
       - WDS_SOCKET_PORT=0
       - WDS_SOCKET_HOST=127.0.0.1
       - FAST_REFRESH=false

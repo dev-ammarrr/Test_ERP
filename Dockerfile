@@ -23,7 +23,7 @@ COPY backend/ ./
 COPY --from=frontend-build /app/frontend/build ./static
 
 # Expose backend port
-EXPOSE 8000
+EXPOSE 8585
 
 # Run migrations and start Django server
-CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8585"]
