@@ -9,6 +9,9 @@ services:
     command: sh -c "pip install -r requirements.txt && python manage.py makemigrations && python manage.py migrate && if [ -f seed_auth.py ]; then python seed_auth.py || (echo '⚠️ seed_auth.py had issues, but continuing...' && echo '   Authentication may need manual setup. Check logs above.'); fi && (python init_db.py || python manage.py populate_data || true) && python manage.py runserver 0.0.0.0:8585"
     environment:
       - PYTHONUNBUFFERED=1
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     networks:
       - app-network
     healthcheck:
@@ -35,6 +38,9 @@ services:
       - FAST_REFRESH=false
       - GENERATE_SOURCEMAP=false
       - DISABLE_ESLINT_PLUGIN=true
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     networks:
       - app-network
     depends_on:
